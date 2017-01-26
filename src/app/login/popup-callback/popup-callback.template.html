@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <script src="/node_modules/oidc-client/dist/oidc-client.js"></script>
+    <script>
+        Oidc.Log.logger = console;
+        Oidc.Log.level = Oidc.Log.INFO;
+
+        new Oidc.UserManager().signinPopupCallback()
+            .then( data => console.log( 'usuário logado', data ) )
+            .catch( error => console.log( 'error in popup' ) );
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<div>
+    <form>
+        <div class="form-group">
+            <label for="category">Categoria</label>
+            <select name="category" class="form-control" required [(ngModel)]="model.categoryId">
+                <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="themes">Tema(s)</label>
+            <ol>
+                <li *ngFor="let theme of themes">
+                    <input type="checkbox" value="{{theme.id}}"  (click)="toggleThemes($event, theme)"/>{{theme.name}}
+                </li>
+            </ol>
+        </div>
+        <div class="form-group">
+            <label for="districts">Município(s)</label>
+            <ol>
+                <li *ngFor="let district of districts" >
+                    <input type="checkbox" value="{{district.id}}" (click)="toggleDistrict($event, disctrict)"/>{{district.name}}
+                </li>
+            </ol>
+        </div>
+        <div class="form-group">
+            <label for="source">Órgão</label>
+            <select name="source" class="form-control" required [(ngModel)]="model.sourceId">
+                <option *ngFor="let source of sources" [value]="source.id">{{source.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="title">Título</label>
+            <input type="text" class="form-control" id="title" [(ngModel)]="model.title" required name="name">
+        </div>
+        <div class="form-group">
+            <label for="description">Descrição</label>
+            <input type="text" class="form-control" id="description" [(ngModel)]="model.description" name="text">
+        </div>
+        <button type="submit" class="btn btn-default" (click)="sendDemand(model)">Submit</button>
+    </form>
+</div>

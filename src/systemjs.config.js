@@ -1,9 +1,22 @@
+let orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
+
 /**
  * System configuration for Angular samples
  * Adjust as necessary for your application needs.
  */
-(function (global) {
-  System.config({
+( function ( global ) {
+
+  let appPath = undefined;
+
+  // Para tratar o deploy em homologação e produção, sem precisar ficar alterando o valor de System.config -> map.app
+  if ( global.location && ( global.location.host.indexOf( 'condevit' ) >= 0 || global.location.host.indexOf( 'planometropolitano' ) >= 0 ) ) {
+    appPath = orchardModulePath;
+  } else {
+    orchardModulePath = '';
+    appPath = 'build/src/app/';
+  }
+
+  System.config( {
     paths: {
       // paths serve as alias
       'npm:': 'node_modules/'
@@ -11,7 +24,7 @@
     // map tells the System loader where to look for things
     map: {
       // our app is within the app folder
-      app: 'app',
+      app: appPath,
 
       // angular bundles
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
@@ -24,8 +37,13 @@
       '@angular/router/upgrade': 'npm:@angular/router/bundles/router-upgrade.umd.js',
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
+      // app related
+      'oidc-client': 'node_modules/oidc-client/lib/oidc-client.js',
+      '@prodest/mapeandoes-typings': 'node_modules/@prodest/mapeandoes-typings/index.js',
+      // 'leaflet': 'node_modules/leaflet/dist/leaflet-src.js',
+
       // other libraries
-      'rxjs':                      'npm:rxjs',
+      'rxjs': 'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
@@ -39,4 +57,4 @@
       }
     }
   });
-})(this);
+})( this );
