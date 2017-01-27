@@ -7,6 +7,7 @@ const clean = require( 'gulp-clean' );
 const bundle = require( 'gulp-bundle-assets' );
 const gulpSystemjsBuilder = require( 'gulp-systemjs-builder' );
 const Builder = require( 'systemjs-builder' );
+const watch = require( 'gulp-watch');
 
 let paths = {
     srcPath: 'src/app/',
@@ -37,6 +38,11 @@ gulp.task( 'bundle', [ 'copy:css' ], function () {
         });
     // return gulp.src( paths.srcPath )
     // .pipe( builder.bundle( '' ) )
+});
+
+gulp.task( 'watch:src', function() {
+    return watch( paths.static, { ignoreInitial: false })
+        .pipe(gulp.dest( paths.buildPath ));
 });
 
 gulp.task( 'build:copy-static', function () {
