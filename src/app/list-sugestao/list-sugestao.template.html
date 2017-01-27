@@ -1,0 +1,19 @@
+<div>
+    <h4>Abaixo as sugestões enviadas pelos nossos internautas</h4>
+    <ol>
+        <li *ngFor="let demand of demands">
+            <div>
+                <h6>Nome Usuário</h6>
+                <span>{{demand.createdAt}}</span>
+            </div>
+            <div>
+                <h2>{{demand.title}}</h2>
+                <span *ngFor="let theme of demand.themes">{{theme.name}}</span>
+                <span *ngFor="let district of demand.districts">{{district ? district.name : ''}}</span>
+                <span>Categoria</span>
+                <span>Source</span>
+                <p>{{demand.description}}</p>
+            </div>
+        </li>
+    </ol>
+</div>

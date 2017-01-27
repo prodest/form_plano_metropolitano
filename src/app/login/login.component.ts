@@ -5,7 +5,7 @@ import { User } from 'oidc-client';
 
 @Component( {
     moduleId: module.id,
-    selector: 'my-app',
+    selector: 'login',
     providers: [ AuthenticationService ], // , Router ],
     templateUrl: 'login.template.html',
     styleUrls: [ orchardModulePath + 'login.component.css' ],

@@ -6,7 +6,7 @@ import { IDistrict, ITheme } from '@prodest/mapeandoes-typings';
 
 @Component( {
     moduleId: module.id,
-    selector: 'my-app',
+    selector: 'form-sugestao',
     providers: [ MapeandoESService ],
     templateUrl: 'form-sugestao.template.html',
     styleUrls: [ orchardModulePath + 'form-sugestao.component.css' ]
