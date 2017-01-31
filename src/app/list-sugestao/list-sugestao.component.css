@@ -5,10 +5,21 @@
     font-size: 6em;
     color: #ccc;
 }
-.suggestion-item{
-    padding-bottom: 30px;
+
+.suggestion-item,
+.filter-items{
     padding-top: 30px;
     border-bottom: 1px solid #e6e6e6;
+}
+.suggestion-item{
+    padding-bottom: 30px;
+}
+.filter-items{
+    padding-bottom: 15px;
+}
+
+.filter-item{
+    padding-bottom: 15px;
 }
 .username{
     font-size: 0.90em;
