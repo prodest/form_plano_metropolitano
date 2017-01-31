@@ -25,10 +25,10 @@ gulp.task( 'clean', function () {
         .pipe( clean() )
 });
 
-gulp.task( 'bundle', [ 'copy:css' ], function () {
+gulp.task( 'bundle', [ 'build:copy-static' ], function () {
     const builder = new Builder( '.', './src/systemjs.config.js' );
 
-    return builder.buildStatic( 'src/app', './src/bundle/main.js' )
+    return builder.buildStatic( './build/src/app/main.js', './build/bundle/main.js' )
         .then( function () {
             console.log( 'Build complete' );
         })
@@ -36,8 +36,6 @@ gulp.task( 'bundle', [ 'copy:css' ], function () {
             console.log( 'Build error' );
             console.log( err );
         });
-    // return gulp.src( paths.srcPath )
-    // .pipe( builder.bundle( '' ) )
 });
 
 gulp.task( 'watch:src', function() {
