@@ -61,7 +61,7 @@ export class AuthenticationService {
     }
 
     popupSignin() {
-        this.manager.signinPopup( { state: 'some data' })
+        this.manager.signinPopup()
             .then(( user ) => console.log( 'user signed in with popup', user ) )
             .catch( err => console.log( err ) );
     }

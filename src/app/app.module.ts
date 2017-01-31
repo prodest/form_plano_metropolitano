@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -10,6 +11,7 @@ import { ListSugestaoComponent } from './list-sugestao/list-sugestao.component';
 
 @NgModule( {
   imports: [ BrowserModule, FormsModule, HttpModule, AppRoutingModule ],
+  providers: [ { provide: APP_BASE_HREF, useValue: '/' }],
   declarations: [ AppComponent, LoginComponent, FormSugestaoComponent, ListSugestaoComponent ],
   bootstrap: [ AppComponent ]
 })
