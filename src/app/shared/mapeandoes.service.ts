@@ -7,10 +7,10 @@ import { settings } from './settings';
 
 @Injectable()
 export class MapeandoESService {
-    baseUrl = settings.apiBaseUrl;
+    private baseUrl: string;
 
     constructor( private http: Http ) {
-
+        this.baseUrl = settings.apiBaseUrl;
     }
 
     getCategories(): Observable<ICategory[]> {
