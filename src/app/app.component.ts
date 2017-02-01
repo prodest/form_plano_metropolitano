@@ -6,7 +6,7 @@ import { settings } from './shared/settings';
   selector: 'my-app',
   template: `<router-outlet></router-outlet>
              <hr />
-             <list-sugestao></list-sugestao>`,
+             <list-demand></list-demand>`,
   styleUrls: [ settings.orchardModulePath + 'app.component.css' ]
 })
 export class AppComponent  { name = 'Angular'; }

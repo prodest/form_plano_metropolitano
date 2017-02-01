@@ -1,13 +1,13 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { FormSugestaoComponent } from './form-sugestao/form-sugestao.component';
-import { ListSugestaoComponent } from './list-sugestao/list-sugestao.component';
+import { FormDemandComponent } from './form-demand/form-demand.component';
+import { ListDemandComponent } from './list-demand/list-demand.component';
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
-    { path: 'form-sugestao', component: FormSugestaoComponent },
-    { path: 'list-sugestao', component: ListSugestaoComponent },
+    { path: 'form-sugestao', component: FormDemandComponent },
+    { path: 'list-sugestao', component: ListDemandComponent },
     { path: '**', component: LoginComponent }
 ];
 

@@ -5,14 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { FormSugestaoComponent } from './form-sugestao/form-sugestao.component';
+import { FormDemandComponent } from './form-demand/form-demand.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ListSugestaoComponent } from './list-sugestao/list-sugestao.component';
+import { ListDemandComponent } from './list-demand/list-demand.component';
 
 @NgModule( {
   imports: [ BrowserModule, FormsModule, HttpModule, AppRoutingModule ],
   providers: [ { provide: APP_BASE_HREF, useValue: '/' }],
-  declarations: [ AppComponent, LoginComponent, FormSugestaoComponent, ListSugestaoComponent ],
+  declarations: [ AppComponent, LoginComponent, FormDemandComponent, ListDemandComponent ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

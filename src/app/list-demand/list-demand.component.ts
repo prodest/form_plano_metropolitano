@@ -7,19 +7,19 @@ import { settings } from '../shared/settings';
 
 @Component( {
     moduleId: module.id,
-    selector: 'list-sugestao',
+    selector: 'list-demand',
     providers: [ MapeandoESService, FormBuilder ],
-    templateUrl: 'list-sugestao.template.html',
-    styleUrls: [ settings.orchardModulePath + 'list-sugestao.component.css' ]
+    templateUrl: 'list-demand.template.html',
+    styleUrls: [ settings.orchardModulePath + 'list-demand.component.css' ]
 })
-export class ListSugestaoComponent implements OnInit {
+export class ListDemandComponent implements OnInit {
     private demands: IDemand[];
     private filters: any;
 
     model: any;
 
     constructor( private mapeandoESService: MapeandoESService, private form: FormBuilder ) {
-        console.log( 'carrega ListSugestaoComponent' );
+        console.log( 'carrega ListDemandComponent' );
         this.demands = [];
         this.filters = {};
         this.model = {

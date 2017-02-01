@@ -10,12 +10,12 @@ import { settings } from '../shared/settings';
 
 @Component( {
     moduleId: module.id,
-    selector: 'form-sugestao',
+    selector: 'form-demand',
     providers: [ MapeandoESService, AuthenticationService ],
-    templateUrl: 'form-sugestao.template.html',
-    styleUrls: [ settings.orchardModulePath + 'form-sugestao.component.css' ]
+    templateUrl: 'form-demand.template.html',
+    styleUrls: [ settings.orchardModulePath + 'form-demand.component.css' ]
 })
-export class FormSugestaoComponent implements OnInit {
+export class FormDemandComponent implements OnInit {
     districts: any[];
     categories: any[];
     themes: any[];
