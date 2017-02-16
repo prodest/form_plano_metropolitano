@@ -5,7 +5,6 @@ import { settings } from './shared/settings';
   moduleId: module.id,
   selector: 'my-app',
   template: `<router-outlet></router-outlet>
-             <hr />
              <list-demand></list-demand>`,
   styleUrls: [ settings.orchardModulePath + 'app.component.css' ]
 })

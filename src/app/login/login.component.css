@@ -1,0 +1,4 @@
+.btn:hover, .btn:focus {
+    color: #fff;
+    text-decoration: none;
+}

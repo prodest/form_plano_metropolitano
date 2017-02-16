@@ -38,9 +38,13 @@ let orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
       // app related
-      'oidc-client': 'node_modules/oidc-client/lib/oidc-client.js',
-      '@prodest/mapeandoes-typings': 'node_modules/@prodest/mapeandoes-typings/index.js',
-      // 'leaflet': 'node_modules/leaflet/dist/leaflet-src.js',
+      'oidc-client': 'npm:oidc-client/lib/oidc-client.js',
+      '@prodest/mapeandoes-typings': 'npm:@prodest/mapeandoes-typings/index.js',
+      'leaflet': 'npm:leaflet/dist/leaflet-src.js',
+      'leaflet.vectorgrid': 'npm:leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js',
+      'leaflet.gridlayer.googlemutant': 'npm:leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js',
+      'leaflet.locatecontrol': 'npm:leaflet.locatecontrol/dist/L.Control.Locate.min.js',
+      'leaflet.markercluster': 'npm:leaflet.markercluster/dist/leaflet.markercluster.js',
 
       // other libraries
       'rxjs': 'npm:rxjs',

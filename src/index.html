@@ -173,9 +173,9 @@ PDUI                </a>
 
 
       <article class="page container-fluid content-item" style="min-height: 381px;">
-<div class="container section-content">
+<div class="container-fluid section-content">
   <div class="row">
-    <div class="span-10 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1">
+    <div class="col-lg-10 col-lg-offset-1">
 
       <header class="row section-header">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
@@ -194,13 +194,20 @@ PDUI                </a>
       <div class="row content-container">
         <div class="span-12 col-xs-12 col-md-12 col-sm-12 col-lg-12">
           <!-- Polyfill(s) for older browsers -->
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+          <link rel="stylesheet" href="http://cdn.es.gov.br/node_modules/leaflet.markercluster/1.0.3/dist/MarkerCluster.css" />
+          <link rel="stylesheet" href="http://cdn.es.gov.br/node_modules/leaflet.markercluster/1.0.3/dist/MarkerCluster.Default.css" />
           <link href="https://cdn.es.gov.br/fonts/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
           <script src="http://cdn.es.gov.br/node_modules/core-js/2.4.1/client/shim.min.js" type="text/javascript"></script>
           <script src="http://cdn.es.gov.br/node_modules/zone.js/0.7.6/dist/zone.js" type="text/javascript"></script>
           <script src="http://cdn.es.gov.br/node_modules/systemjs/0.19.40/dist/system.src.js" type="text/javascript"></script>
           <script src="build/src/systemjs.config.js" type="text/javascript"></script>
+          <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnEDzUpJxGoJMQLe5jDnNlO7lUZPt57CE" async defer></script>
           <script>
-            System.import('app').catch(function (err) { console.error(err); });
+            System.import('leaflet')
+              .then( () => System.import('app'))
+              .catch( function (err) { console.error(err); } );
+            
           </script>
             <my-app>
               <div class="text-center text-center background-primary-button-color visible sr-only" style="margin-top: 10px;">

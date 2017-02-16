@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <script src="http://cdn.es.gov.br/node_modules/oidc-client/1.2.2/dist/oidc-client.min.js"></script>
+    <script>
+        Oidc.Log.logger = console;
+        Oidc.Log.level = Oidc.Log.INFO;
+
+        new Oidc.UserManager().signoutRedirectCallback();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+/*.on-map {
+    position: absolute;
+    z-index: 1000;
+}
+
+.map-button {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+}
+
+
+.leaflet-clickable {
+  cursor: crosshair !important;
+}
+
+.leaflet-container {
+  cursor: help !important;
+}*/
+
+
+/*#map {
+    overflow: hidden;
+    width: 100%;
+    height: 400px;
+    background-color: lightgray;
+}*/
+
+body {
+    margin:0;
+    padding:0;
+}
+
+#map {
+    /*position:absolute;
+    top:50px;
+    bottom:0;*/
+    width:100%;
+    height: 600px;
+}
+
+#map .leaflet-marker-icon.user-icon > i {
+    color: #ad4777;
+}
+
+#map .leaflet-marker-icon.base-icon > i {
+    color: #335e90;
+}
+
+.btn:hover, .btn:focus {
+    color: #fff;
+    text-decoration: none;
+}

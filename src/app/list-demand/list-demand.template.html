@@ -1,34 +1,38 @@
 <div class="row">
     <div class="col-lg-12">
+        <hr />
         <div class="row">
             <div class="col-lg-12">
-                <p class="text-center">Abaixo as sugestões enviadas pelos nossos internautas</p>
+                <p class="text-center">Abaixo as contribuições enviadas pelos nossos cidadãos metropolitanos</p>
             </div>
         </div>
         <div class="row filter-items">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <h4>Filtrar por:</h4>
+            </div>
             <form>
-                <div class="col-sm-6 col-md-3 filter-item">
-                    <select class="form-control" name="themeFilter" [(ngModel)]="model.themeFilter" (change)="filter(model)">
+                <div class="col-sm-6 col-md-4 filter-item">
+                    <select class="form-control" name="themeFilter" [(ngModel)]="model.filters.theme" (change)="filter(model.filters)">
                         <option value="">Todos os Temas</option>
                         <option *ngFor="let theme of filters.themes" [ngValue]="theme">{{theme.name}}</option>
                     </select>
                 </div>
-                <div class="col-sm-6 col-md-3 filter-item">
-                    <select class="form-control" name="categoryFilter" [(ngModel)]="model.categoryFilter" (change)="filter(model)">
+                <!-- <div class="col-sm-6 col-md-3 filter-item">
+                    <select class="form-control" name="categoryFilter" [(ngModel)]="model.filters.category" (change)="filter(model.filters)">
                         <option value="">Todas as Categorias</option>
                         <option *ngFor="let category of filters.categories" [ngValue]="category">{{category.name}}</option>
                     </select>
-                </div>
-                <div class="col-sm-6 col-md-3 filter-item">
-                    <select class="form-control" name="sourceFilter" [(ngModel)]="model.sourceFilter" (change)="filter(model)">
-                        <option value="">Todas as Origens</option>
-                        <option *ngFor="let source of filters.sources" [ngValue]="source">{{source.name}}</option>
-                    </select>
-                </div>
-                <div class="col-sm-6 col-md-3 filter-item">
-                    <select class="form-control" name="districtFilter" [(ngModel)]="model.districtFilter" (change)="filter(model)">
+                </div>-->
+                <div class="col-sm-6 col-md-4 filter-item">
+                    <select class="form-control" name="districtFilter" [(ngModel)]="model.filters.district" (change)="filter(model.filters)">
                         <option value="">Todos os Municípios</option>
                         <option *ngFor="let district of filters.districts" [ngValue]="district">{{district.name}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-4 filter-item">
+                    <select class="form-control" name="sourceFilter" [(ngModel)]="model.filters.source" (change)="filter(model.filters)">
+                        <option value="">Todas as Instituições</option>
+                        <option *ngFor="let source of filters.sources" [ngValue]="source">{{source.name}}</option>
                     </select>
                 </div>
             </form>
@@ -38,34 +42,28 @@
                 <div class="user-foto">
                     <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                 </div>
-                <div class="username">Nome Usuário</div>
+                <div class="username">{{demand.externalUser ? demand.externalUser.name : ''}}</div>
                 <div class="date-suggestion">{{demand.createdAt | date: 'dd/MM/yyyy' }}</div>
             </div>
             <div class="col-sm-9">
                 <h4 class="title-suggestion">{{demand.title}}</h4>
                 <div class="container-description">
                     <div class="theme-suggestion">
-                        <span *ngFor="let theme of demand.themes; let i = index">{{theme.name}}<span *ngIf=" i < [demand.themes.length - 1]">, </span>                        </span>
+                        <span *ngFor="let theme of demand.themes; let last = last">{{theme.name}}<span *ngIf="!last">, </span></span>
                     </div>
                     <div class="district-suggestion">
-                        <span *ngIf=" demand.themes.length > 0"><i class="fa fa-map-marker color-secondary-color" aria-hidden="true"></i></span><span
-                            *ngFor="let district of demand.districts; let i = index">{{district ? district.name : ''}} <span *ngIf=" i < [demand.themes.length - 1] &&  district ? district.name : ''">, </span>                        Vitória</span>
+                        <span *ngFor="let district of demand.districts; let last = last; let first = first">
+                            <span *ngIf="first"><i class="fa fa-map-marker color-secondary-color" aria-hidden="true"></i></span> {{district ? district.name : ''}}
+                        <span *ngIf="!last">,</span>
+                        </span>
                     </div>
                     <div class="category-source">
-                        <span class="category" title="Categoria"><i class="fa fa-tag  fa-rotate-90 icon-content color-secondary-color" aria-hidden="true"></i><span>Bicicletário </span></span>
-                        <span class="source" title="Origem"><i class="fa fa-group color-secondary-color" aria-hidden="true"></i> <span>Entidade de Classe</span></span>
+                        <!--<span *ngIf="demand.category" class="category" title="Categoria"><i class="fa fa-tag  fa-rotate-90 icon-content color-secondary-color" aria-hidden="true"></i>{{demand.category.name}}</span>-->
+                        <span *ngIf="demand.source" class="source" title="Origem"><i class="fa fa-group color-secondary-color" aria-hidden="true"></i> {{demand.source.name}}</span>
                     </div>
                     <div class="content-description">
                         <p>
-                            {{demand.description}} || Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt aliquam est et facilisis.
-                            Etiam dignissim convallis urna, et volutpat leo bibendum eu. Phasellus quis libero ac ante tempor
-                            vehicula. Aliquam faucibus, mi eu iaculis tincidunt, purus libero semper libero, nec convallis
-                            massa velit a metus. Aliquam tristique aliquam nibh eget convallis. Curabitur aliquam, nisl non
-                            vulputate sollicitudin, diam nunc euismod tortor, id sollicitudin mauris ante in lectus. Integer
-                            fringilla neque risus, quis scelerisque lectus faucibus vitae. Ut tristique, orci eget tincidunt
-                            sodales, nulla felis elementum nunc, eget finibus eros nulla sodales diam. Lorem ipsum dolor
-                            sit amet, consectetur adipiscing elit. In mi turpis, volutpat eget fringilla in, pharetra eget
-                            enim.
+                            {{demand.description}}
                         </p>
                     </div>
                 </div>

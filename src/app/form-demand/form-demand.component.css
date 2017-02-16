@@ -1,19 +1,26 @@
 
- ol{
-     list-style: none;
-     padding: 0;
- }
+ol{
+    list-style: none;
+    padding: 0;
+}
+
 form textarea {
     height: 150px;
 }
+
 .btn-primary:focus {
     background-color: #ad4777;
     outline-color: #9e064e;
 }
- .btn-group-vertical[data-toggle="buttons"] label{
+
+.btn-group-vertical[data-toggle="buttons"] label{
     display: block;
     width: inherit;     
- }
+}
+
+.btn-back-button {
+    float: left;
+}
 
 .btn-submit{
     min-width: 180px;
@@ -21,97 +28,131 @@ form textarea {
     padding-bottom: 10px;
     font-size: 1.3em; 
 }
- 
-  label{
+
+label{
     font-size: 1.1em;
     margin-bottom: 8px;
-  }
-  label.btn{
+}
+
+label.btn{
     margin-bottom: 0;      
-  }
-  label.btn span {
+}
+
+label input[type="radio"] ~ i.fa.fa-circle-o{
+    color: #5f5f5f;    display: inline;
+}
+
+label input[type="radio"] ~ i.fa.fa-dot-circle-o{
+    display: none;
+}
+
+label input[type="radio"]:checked ~ i.fa.fa-circle-o{
+    display: none;
+}
+
+label input[type="radio"]:checked ~ i.fa.fa-dot-circle-o{
+    color: #c51267;    display: inline;
+}
+
+label:hover input[type="radio"] ~ i.fa {
+    color: #c51267;
+}
+
+label input[type="checkbox"] ~ i.fa.fa-square-o{
+    color: #5f5f5f;    
+    display: inline;
+    vertical-align: sub;
+}
+
+label input[type="checkbox"] ~ i.fa.fa-check-square-o,
+label.btn input[type="checkbox"]{
+    display: none;
+}
+
+label input[type="checkbox"]:checked ~ i.fa.fa-square-o{
+    display: none;
+}
+
+label input[type="checkbox"]:checked ~ i.fa.fa-check-square-o {
+    color: #c51267;    
+    display: inline;
+    vertical-align: sub;
+}
+
+label:hover input[type="checkbox"] ~ i.fa {
+    color: #c51267;
+}
+
+.checkbox-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkbox-group label:hover {
+    color: #c51267;
+    cursor: pointer;
+}
+
+.checkbox-group label:active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #c51267;
+}
+
+.checkbox-group label span {
     font-size: 1.5em ; 
-  }
+}
 
-  label input[type="radio"] ~ i.fa.fa-circle-o{
-      color: #5f5f5f;    display: inline;
-  }
-  label input[type="radio"] ~ i.fa.fa-dot-circle-o{
-      display: none;
-  }
-  label input[type="radio"]:checked ~ i.fa.fa-circle-o{
-      display: none;
-  }
-  label input[type="radio"]:checked ~ i.fa.fa-dot-circle-o{
-      color: #c51267;    display: inline;
-  }
-  label:hover input[type="radio"] ~ i.fa {
-  color: #c51267;
-  }
+:invalid {
+    box-shadow: none; /* FF */
+    outline: 0;       /* IE 10 */
+}
 
-  label input[type="checkbox"] ~ i.fa.fa-square-o{
-      color: #5f5f5f;    display: inline;
-      vertical-align: sub;
-  }
-  label input[type="checkbox"] ~ i.fa.fa-check-square-o,
-  label.btn input[type="checkbox"]{
-      display: none;
-  }
-  label input[type="checkbox"]:checked ~ i.fa.fa-square-o{
-      display: none;
-  }
-  label input[type="checkbox"]:checked ~ i.fa.fa-check-square-o{
-      color: #c51267;    display: inline;
-      vertical-align: sub;
-  }
-  label:hover input[type="checkbox"] ~ i.fa {
-  color: #c51267;
-  }
+.checkbox-group label input[type="checkbox"]:checked ~ span {
+    color: #c51267;    
+}
 
-  div[data-toggle="buttons"] label.active,
-  ol[data-toggle="buttons"] label.active{
-      color: #c51267;
-  }
+.checkbox-group label {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 2em;
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+    background: none;
+    outline: none;
+    box-shadow: none;
+    border: 0px solid 
+    #5f5f5f;
+    border-radius: 3px;
+    color: #5f5f5f;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    font-family: 'OpenSans-Semibold',Arial,sans-serif;
+}
 
-  div[data-toggle="buttons"] label,
-  ol[data-toggle="buttons"] label   {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 11px;
-  font-weight: normal;
-  line-height: 2em;
-  text-align: left;
-  white-space: nowrap;
-  vertical-align: top;
-  cursor: pointer;
-  background: none;
-  outline: none;
-  box-shadow: none;
-  border: 0px solid 
-  #5f5f5f;
-  border-radius: 3px;
-  color: #5f5f5f;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-  font-family: 'OpenSans-Semibold',Arial,sans-serif;
-  }
+.checkbox-group label input {
+    position: absolute;
+    z-index: -1;
+    filter: alpha(opacity=0);
+    opacity: 0;
+}
 
-  div[data-toggle="buttons"] label:hover,
-  ol[data-toggle="buttons"] label:hover {
-  color: #c51267;
-  }
-
-  div[data-toggle="buttons"] label:active, 
-  div[data-toggle="buttons"] label.active,
-  ol[data-toggle="buttons"] label:active, 
-  ol[data-toggle="buttons"] label.active {
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  }
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+}
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+}
 
 @media (max-width: 767px) {
     .btn-submit{

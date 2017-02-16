@@ -13,7 +13,7 @@ import { settings } from '../shared/settings';
                    <div class="recent-read-more learn-more">
                    <button (click)="login()" 
                            title="Entrar pelo Acesso Cidadão"
-                           class="btn btn-primary btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">Entrar com o Acesso Cidadão</button>
+                           class="btn btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">Entrar com o Acesso Cidadão</button>
                    </div>    
                </div>`,
     styleUrls: [ settings.orchardModulePath + 'login.component.css' ]
@@ -32,7 +32,7 @@ export class LoginComponent {
 
         this.authenticationService.userLoadededEvent.subscribe(( user: User ) => {
             if ( user ) {
-                this.router.navigate( [ 'form-sugestao' ] );
+                this.router.navigate( [ 'participe' ] );
             }
         });
     }
@@ -46,6 +46,7 @@ export class LoginComponent {
     login() {
         // window.location.href = `https://acessocidadao.es.gov.br/Conta/Entrar?ReturnUrl=${encodeURI( window.location.href )}`;
         this.authenticationService.popupSignin();
+        // this.authenticationService.trySilentLogin();
     }
 }
 
