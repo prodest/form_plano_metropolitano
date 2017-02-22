@@ -7,7 +7,7 @@ const clean = require( 'gulp-clean' );
 const bundle = require( 'gulp-bundle-assets' );
 const gulpSystemjsBuilder = require( 'gulp-systemjs-builder' );
 const Builder = require( 'systemjs-builder' );
-const watch = require( 'gulp-watch');
+const watch = require( 'gulp-watch' );
 
 let paths = {
     srcPath: 'src/app/',
@@ -28,7 +28,7 @@ gulp.task( 'clean', function () {
 gulp.task( 'bundle', [ 'build:copy-static' ], function () {
     const builder = new Builder( '.', './src/systemjs.config.js' );
 
-    return builder.buildStatic( './build/src/app/main.js', './build/bundle/main.js' )
+    return builder.buildStatic( './build/src/app/main.js', './build/bundle/main.js', { minify: true })
         .then( function () {
             console.log( 'Build complete' );
         })
@@ -38,9 +38,9 @@ gulp.task( 'bundle', [ 'build:copy-static' ], function () {
         });
 });
 
-gulp.task( 'watch:src', function() {
+gulp.task( 'watch:src', function () {
     return watch( paths.static, { ignoreInitial: false })
-        .pipe(gulp.dest( paths.buildPath ));
+        .pipe( gulp.dest( paths.buildPath ) );
 });
 
 gulp.task( 'build:copy-static', function () {

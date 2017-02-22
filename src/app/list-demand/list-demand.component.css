@@ -3,45 +3,45 @@
     color: #ccc;
 }
 
-.suggestion-item,
-.filter-items{
+.suggestion-item {
     padding-top: 30px;
     border-bottom: 1px solid #e6e6e6;
 }
+
 .suggestion-item{
     padding-bottom: 30px;
 }
-.filter-items{
-    padding-bottom: 15px;
-}
 
-.filter-item{
-    padding-bottom: 15px;
-}
 .username{
     font-size: 0.90em;
     margin: 12px 0 5px 0;
     font-weight: bold;
     text-transform: uppercase;    
 }
+
 .date-suggestion{
     font-size: 0.90em;
 }
+
 .title-suggestion{
     font-size: 1.5em;
     font-weight: bold;
 }
+
 .container-description{
     font-size: 0.90em;    
 }
+
 .theme-suggestion,
 .district-suggestion,
 .category-source{
     font-weight: 600;
 }
+
 .icon-content{
     margin-right: 5px;
 }
+
 .content-description {
     margin-top: 12px;
 }

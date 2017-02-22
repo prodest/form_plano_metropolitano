@@ -194,7 +194,7 @@ PDUI                </a>
       <div class="row content-container">
         <div class="span-12 col-xs-12 col-md-12 col-sm-12 col-lg-12">
           <!-- Polyfill(s) for older browsers -->
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+          <link rel="stylesheet" href="http://cdn.es.gov.br/node_modules/leaflet/1.0.3/dist/leaflet.css" />
           <link rel="stylesheet" href="http://cdn.es.gov.br/node_modules/leaflet.markercluster/1.0.3/dist/MarkerCluster.css" />
           <link rel="stylesheet" href="http://cdn.es.gov.br/node_modules/leaflet.markercluster/1.0.3/dist/MarkerCluster.Default.css" />
           <link href="https://cdn.es.gov.br/fonts/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -205,7 +205,7 @@ PDUI                </a>
           <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnEDzUpJxGoJMQLe5jDnNlO7lUZPt57CE" async defer></script>
           <script>
             System.import('leaflet')
-              .then( () => System.import('app'))
+              .then( function() { return System.import('app'); } )
               .catch( function (err) { console.error(err); } );
             
           </script>

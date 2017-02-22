@@ -53,7 +53,7 @@ let orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
       app: {
-        main: './main.js',
+        main: './main.js?v=0.0.3',
         defaultExtension: 'js'
       },
       rxjs: {

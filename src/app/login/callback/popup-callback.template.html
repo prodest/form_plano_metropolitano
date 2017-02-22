@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
 </head>
-
 <body>
-    <script src="http://cdn.es.gov.br/node_modules/oidc-client/1.2.2/dist/oidc-client.min.js"></script>
-    <script>
+    <script type="text/javascript" src="http://cdn.es.gov.br/node_modules/oidc-client/1.2.2/dist/oidc-client.min.js"></script>
+    <script type="text/javascript">
         Oidc.Log.logger = console;
         Oidc.Log.level = Oidc.Log.INFO;
 
-        new Oidc.UserManager().signinPopupCallback()
-            .then( data => console.log( 'usuário logado', data ) )
-            .catch( error => console.log( 'error in popup' ) );
+        new Oidc.UserManager().signinPopupCallback();
     </script>
 </body>
-
 </html>

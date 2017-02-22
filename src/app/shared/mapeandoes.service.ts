@@ -38,26 +38,16 @@ export class MapeandoESService {
     }
 
     getDemands( filters: any ): Observable<IDemand[]> {
-        let body = { where: {} };
-        for ( let key in filters ) {
-            if ( filters[ key ] !== '' ) {
-                body.where[ key + 'Id' ] = filters[ key ].id;
-            }
-        }
+        let body = this.buildFilter( filters );
 
         return this.http.post( `${this.baseUrl}/demands/query`, body )
             .map(( response: Response ) => response.json().result as IDemand[] );
     }
 
     getUnfilteredDemands( filters: any ): Promise<IDemand[]> {
-        let body = { where: {} };
-        for ( let key in filters ) {
-            if ( filters[ key ] !== '' ) {
-                body.where[ key + 'Id' ] = filters[ key ].id;
-            }
-        }
+        let body = this.buildFilter( filters );
         return this.authenticationService.getAuthHeaders().then( headers => {
-            return this.http.post( `${this.baseUrl}/secure/demands/query`, body, { headers: headers } )
+            return this.http.post( `${this.baseUrl}/secure/demands/query`, body, { headers: headers })
                 .map(( response: Response ) => response.json().result as IDemand[] )
                 .toPromise();
         });
@@ -79,5 +69,25 @@ export class MapeandoESService {
                 .map(( response: Response ) => response.json() )
                 .toPromise();
         });
+    }
+
+    private buildFilter( filters: any ): any {
+        let jsDataFilter = { where: {} };
+        for ( let key in filters ) {
+            if ( filters[ key ] !== '' ) {
+                switch ( key ) {
+                    case 'category':
+                    case 'source':
+                        jsDataFilter.where[ key + 'Id' ] = { '==': filters[ key ].id };
+                        break;
+                    case 'district':
+                    case 'theme':
+                        jsDataFilter.where[ key + 's' ] = { 'isectNotEmpty': [ filters[ key ] ] };
+                        break;
+                }
+            }
+        }
+
+        return jsDataFilter;
     }
 }

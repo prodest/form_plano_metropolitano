@@ -16,6 +16,7 @@ import { ListDemandComponent } from './list-demand/list-demand.component';
 import { SuccessDemandComponent } from './success-demand/success-demand.component';
 import { MapComponent } from './map/map.component';
 import { FormRootComponent } from './form-root/form-root.component';
+import { FilterDemandComponent } from './filter-demand/filter-demand.component';
 
 // Services
 import { AuthenticationService } from './shared/authentication.service';
@@ -33,7 +34,8 @@ import { OSMNominatimService } from './shared/osm-nominatim.service';
     ListDemandComponent,
     SuccessDemandComponent,
     MapComponent,
-    FormRootComponent
+    FormRootComponent,
+    FilterDemandComponent
   ],
   bootstrap: [ AppComponent ]
 })

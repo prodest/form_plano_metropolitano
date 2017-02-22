@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../shared/authentication.service';
 import { User } from 'oidc-client';
@@ -12,13 +12,15 @@ import { settings } from '../shared/settings';
                    <p>Para fazer sua sugestão é necessário entrar com sua conta do <b>Acesso Cidadão ES</b></p>
                    <div class="recent-read-more learn-more">
                    <button (click)="login()" 
-                           title="Entrar pelo Acesso Cidadão"
-                           class="btn btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">Entrar com o Acesso Cidadão</button>
+                           title="Continuar com o Acesso Cidadão"
+                           class="btn btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">Continuar com o Acesso Cidadão</button>
                    </div>    
                </div>`,
     styleUrls: [ settings.orchardModulePath + 'login.component.css' ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+    @Input( 'autoShow' ) autoShow: boolean;
+    @Output() onUserLogin = new EventEmitter<User>();
 
     /**
      * Creates an instance of LoginComponent.
@@ -30,11 +32,13 @@ export class LoginComponent {
         private router: Router,
         private authenticationService: AuthenticationService ) {
 
-        this.authenticationService.userLoadededEvent.subscribe(( user: User ) => {
-            if ( user ) {
-                this.router.navigate( [ 'participe' ] );
-            }
-        });
+        this.authenticationService.userLoadededEvent.subscribe(( user: User ) => this.onUserLogin.emit( user ) );
+    }
+
+    ngOnInit() {
+        if ( this.autoShow ) {
+            this.login();
+        }
     }
 
     /**

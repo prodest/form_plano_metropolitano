@@ -18,7 +18,7 @@ export class AuthenticationService {
         client_id: settings.authentication.client_id,
         // redirect_uri: settings.authentication.redirect_uri,
         popup_redirect_uri: settings.authentication.redirect_uri,
-        // popupWindowFeatures: ,
+        popupWindowFeatures: 'location=no,toolbar=no,width=768,height=800,left=100,top=100',
         // popupWindowTarget: ,
 
         post_logout_redirect_uri: settings.authentication.post_logout_redirect_uri,

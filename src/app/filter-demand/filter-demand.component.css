@@ -1,0 +1,22 @@
+.suggestion-item,
+.filter-items{
+    padding-top: 30px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.suggestion-item{
+    padding-bottom: 30px;
+}
+.filter-items{
+    padding-bottom: 15px;
+}
+
+.filter-item{
+    padding-bottom: 15px;
+}
+
+@media screen and (min-width: 768px) {
+    .label-filtro {
+        text-align: right;
+        padding: 10px 0;
+    }
+}

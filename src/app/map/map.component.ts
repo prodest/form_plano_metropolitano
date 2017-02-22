@@ -1,45 +1,39 @@
 import 'rxjs/Rx';
 // import 'leaflet';
 import { LatLng } from 'leaflet';
-import 'leaflet.vectorgrid';
 import 'leaflet.markercluster';
 import 'leaflet.locatecontrol';
-import { Component, OnInit, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewEncapsulation, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { settings } from '../shared/settings';
 import { MapService } from '../shared/map.service';
+import { MapeandoESService } from '../shared/mapeandoes.service';
 import { BaseIcon } from './base-icon.class';
+import { geoJsonGrandeVitoria } from './grande-vitoria';
 declare let L: any;
 
 @Component( {
     moduleId: module.id,
     selector: 'map-demand',
-    providers: [ MapService ],
+    providers: [ MapService, MapeandoESService ],
     template: `<div id="map"></div>`,
     styleUrls: [ settings.orchardModulePath + 'map.component.css' ],
     encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnChanges {
     @Output() onNewDemand = new EventEmitter<void>();
     @Output() onLocationChanged = new EventEmitter<LatLng>();
 
-    currentLatLng: LatLng;
+    @Input() showNewDemandButton: boolean = true;
+    @Input() demands: any[] = [];
+    @Input() currentLatLng: LatLng;
 
+    zoomControl: any;
     marker: any = undefined;
-
-    points: any = [
-        { lat: -20.230617558978773, lng: -40.2763159275055 },
-        { lat: -20.244855959480313, lng: -40.26429963111878 },
-        { lat: -20.247387074660265, lng: -40.297945261001594 },
-        { lat: -20.226503965892964, lng: -40.309961557388306 },
-        { lat: -20.29802183605071, lng: -40.31064820289612 },
-        { lat: -20.3136277, lng: -40.2969136 },
-        { lat: -20.3132016, lng: -40.2963147 }
-    ];
-
+    markersGroupDemands: any = undefined;
     baseIcon: any = new BaseIcon();
 
-    constructor( private mapService: MapService, private router: Router ) { }
+    constructor( private mapService: MapService, private router: Router, private mapeandoESService: MapeandoESService ) { }
 
     newDemand() {
         this.mapService.map.closePopup();
@@ -47,6 +41,109 @@ export class MapComponent implements OnInit {
     }
 
     ngOnInit() {
+        let map = this.createMap();
+        if ( this.currentLatLng ) {
+            this.marker = L.marker( this.currentLatLng, {
+                icon: new BaseIcon( { className: 'user-icon' }),
+                draggable: true
+            })
+                .addTo( map );
+
+            map.setView( this.currentLatLng, 13 );
+        }
+
+        // this.setUserLocation( map );
+        this.mapService.map = map;
+    }
+
+    ngOnChanges( changes: SimpleChanges ) {
+        // changes.prop contains the old and the new value...
+        if ( this.mapService.map && changes[ 'demands' ] ) {
+            this.loadMarkers( this.mapService.map );
+        }
+    }
+
+    public disableMap() {
+        this.mapService.map.dragging.disable();
+        this.mapService.map.touchZoom.disable();
+        this.mapService.map.doubleClickZoom.disable();
+        this.mapService.map.scrollWheelZoom.disable();
+        this.mapService.map.boxZoom.disable();
+        this.mapService.map.keyboard.disable();
+        this.mapService.map.off( 'click' );
+        if ( this.mapService.map.tap ) { this.mapService.map.tap.disable(); }
+        document.getElementById( 'map' ).style.cursor = 'default';
+
+        this.zoomControl.disable();
+        this.clearMarker( this.mapService.map );
+        this.clearLocation();
+    }
+
+    public enableMap() {
+        this.mapService.map.dragging.enable();
+        this.mapService.map.touchZoom.enable();
+        this.mapService.map.doubleClickZoom.enable();
+        this.mapService.map.scrollWheelZoom.enable();
+        this.mapService.map.boxZoom.enable();
+        this.mapService.map.keyboard.enable();
+        this.mapService.map.on( 'click', this.mapClick( this.mapService.map ) );
+        if ( this.mapService.map.tap ) { this.mapService.map.tap.enable(); }
+        document.getElementById( 'map' ).style.cursor = 'grab';
+
+        this.zoomControl.enable();
+    }
+
+    private clearLocation() {
+        this.currentLatLng = undefined;
+    }
+
+    private clearMarker( map: any ) {
+        if ( this.marker ) {
+            map.removeLayer( this.marker );
+        }
+    }
+
+    /*private setUserLocation( map: any ) {
+        let locateControl = L.control.locate( { position: 'topright', keepCurrentZoomLevel: true }).addTo( map );
+        locateControl.start();
+    }*/
+
+    private popupTemplate( demand: any ) {
+        let subTitleTemplate = '';
+        demand.themes.forEach(( theme: any ) => {
+            subTitleTemplate += `${theme.name}, `;
+        });
+        subTitleTemplate = subTitleTemplate.substring( 0, subTitleTemplate.length - 2 );
+        if ( demand.districts.length > 0 ) {
+            subTitleTemplate += '<i class="fa fa-map-marker" aria-hidden="true"></i>';
+            demand.districts.forEach(( theme: any ) => {
+                subTitleTemplate += `${theme.name}, `;
+            });
+            subTitleTemplate = subTitleTemplate.substring( 0, subTitleTemplate.length - 2 );
+        }
+        return `<h3>${demand.title}</h3>
+                <h4>${subTitleTemplate}</h4>
+                <p>${demand.description}</p>`;
+    }
+
+    private loadMarkers( map: any ) {
+        if ( this.markersGroupDemands ) {
+            map.removeLayer( this.markersGroupDemands );
+        }
+
+        this.markersGroupDemands = L.markerClusterGroup();
+        this.markersGroupDemands.addLayers(
+            this.demands
+                .filter( demand => demand.pins && demand.pins.length > 0 && demand.pins[ 0 ].location )
+                .map(( demand ) => {
+                    let pin: any = demand.pins[ 0 ];
+                    return L.marker( [ pin.location.lat, pin.location.lon ], { icon: this.baseIcon })
+                        .bindPopup( this.popupTemplate( demand ), { offset: L.point( 12, 6 ) });
+                }) );
+        map.addLayer( this.markersGroupDemands );
+    };
+
+    private createMap() {
         let map = L.map( 'map', {
             zoomControl: false,
             center: L.latLng( -20.315894186649725, -40.29565483331681 ),
@@ -55,13 +152,23 @@ export class MapComponent implements OnInit {
             maxZoom: 18,
             maxBounds: L.latLngBounds( L.latLng( -21.361013117950915, -41.97223663330079 ),
                 L.latLng( -17.853290114098012, -39.52228546142579 ) ),
-            layers: [ this.mapService.baseMaps.MapBox ]
+            layers: [ this.mapService.baseMaps.GoogleMaps ]
         });
 
-        L.control.zoom( { position: 'topright' }).addTo( map );
+        this.zoomControl = L.control.zoom( { position: 'topright' }).addTo( map );
         L.control.scale().addTo( map );
 
-        map.on( 'click', ( e: any ) => {
+        /*let coords = geoJsonGrandeVitoria.geometries.coordinates.map( a => L.latLng( a[ 1 ], a[ 0 ] ) );
+        L.polygon( coords ).addTo( map );
+        console.log( coords );*/
+
+        map.on( 'click', this.mapClick( map ) );
+
+        return map;
+    }
+
+    private mapClick( map: any ) {
+        return ( e: any ) => {
             if ( this.marker ) {
                 map.removeLayer( this.marker );
             }
@@ -72,35 +179,20 @@ export class MapComponent implements OnInit {
             this.marker = L.marker( e.latlng, {
                 icon: new BaseIcon( { className: 'user-icon' }),
                 draggable: true
-            })
-                .bindPopup( this.PopUpContent, {
-                    offset: L.point( 12, 6 )
-                })
-                .addTo( map )
-                .openPopup();
+            });
 
+            if ( this.showNewDemandButton ) {
+                this.marker.bindPopup( this.PopUpContent, { offset: L.point( 12, 6 ) });
+            }
+            this.marker.addTo( map );
+            if ( this.showNewDemandButton ) {
+                this.marker.openPopup();
+            }
 
             this.marker.on( 'moveend', ( moveEvent: any ) => {
                 this.onLocationChanged.emit( moveEvent.target._latlng );
             });
-        });
-
-        let markersGroup = L.markerClusterGroup();
-
-        markersGroup.addLayers(
-            this.points.map(
-                ( latLng: any, i: number ) =>
-                    L.marker( latLng, { icon: this.baseIcon })
-                        .bindPopup( 'Marker ' + i, { offset: L.point( 12, 6 ) })
-            )
-        );
-
-        map.addLayer( markersGroup );
-
-        let locateControl = L.control.locate( { position: 'topright', keepCurrentZoomLevel: true }).addTo( map );
-        locateControl.start();
-
-        this.mapService.map = map;
+        };
     }
 
     private get PopUpContent(): HTMLElement {
@@ -110,4 +202,65 @@ export class MapComponent implements OnInit {
         btn.addEventListener( 'click', this.newDemand.bind( this ) );
         return btn;
     }
+
+    //  Globals which should be set before calling these functions:
+    //
+    //  int    polyCorners  =  how many corners the polygon has (no repeats)
+    //  float  polyX[]      =  horizontal coordinates of corners
+    //  float  polyY[]      =  vertical coordinates of corners
+    //  float  x, y         =  point to be tested
+    //
+    //  The following global arrays should be allocated before calling these functions:
+    //
+    //  float  constant[] = storage for precalculated constants (same size as polyX)
+    //  float  multiple[] = storage for precalculated multipliers (same size as polyX)
+    //
+    //  (Globals are used in this example for purposes of speed.  Change as
+    //  desired.)
+    //
+    //  USAGE:
+    //  Call precalc_values() to initialize the constant[] and multiple[] arrays,
+    //  then call pointInPolygon(x, y) to determine if the point is in the polygon.
+    //
+    //  The function will return YES if the point x,y is inside the polygon, or
+    //  NO if it is not.  If the point is exactly on the edge of the polygon,
+    //  then the function may return YES or NO.
+    //
+    //  Note that division by zero is avoided because the division is protected
+    //  by the "if" clause which surrounds it.
+
+    /*   private constant;
+       private multiple;
+   
+       private precalc_values( polyCorners, polyY, polyX ) {
+           let j = polyCorners - 1;
+   
+           for ( let i = 0; i < polyCorners; i++ ) {
+               if ( polyY[ j ] === polyY[ i ] ) {
+                   this.constant[ i ] = polyX[ i ];
+                   this.multiple[ i ] = 0;
+               }
+               else {
+                   this.constant[ i ] = polyX[ i ] - ( polyY[ i ] * polyX[ j ] ) / ( polyY[ j ] - polyY[ i ] ) + ( polyY[ i ] * polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
+                   this.multiple[ i ] = ( polyX[ j ] - polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
+               }
+               j = i;
+           }
+       }
+   
+       private pointInPolygon( polyCorners, polyY, polyX, constant, multiple ): boolean {
+   
+           int   i, j = polyCorners - 1;
+           bool  oddNodes= NO;
+   
+           for ( i = 0; i < polyCorners; i++ ) {
+               if ( ( polyY[ i ] < y && polyY[ j ] >= y
+                   || polyY[ j ] < y && polyY[ i ] >= y ) ) {
+                   oddNodes ^= ( y * multiple[ i ] + constant[ i ] < x );
+               }
+               j = i;
+           }
+   
+           return oddNodes;
+       }*/
 }

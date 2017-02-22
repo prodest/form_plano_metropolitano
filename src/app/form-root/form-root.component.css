@@ -1,0 +1,26 @@
+.header-map {
+    color: #AD4777;
+    font-weight: bold;
+}
+
+.animate-open {
+    transition: height 1s ease-in-out;
+}
+
+.top-divider {
+    height: 2px;
+    background-color: #ad4777;
+}
+
+.titulo-contribuicoes {
+    font-size: 1.2em;
+    float: left;
+}
+
+.btn-enviar-sugestao {
+    float: right;
+}
+
+.info-mapa {
+    margin-bottom: 10px;
+}
