@@ -8,6 +8,9 @@ import { HttpModule } from '@angular/http';
 // Routing
 import { AppRoutingModule } from './app-routing.module';
 
+// Modules
+import { ModalModule } from 'ngx-modal';
+
 // Components
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -25,7 +28,7 @@ import { OSMNominatimService } from './shared/osm-nominatim.service';
 
 
 @NgModule( {
-  imports: [ BrowserModule, FormsModule, HttpModule, AppRoutingModule ],
+  imports: [ BrowserModule, FormsModule, HttpModule, AppRoutingModule, ModalModule ],
   providers: [ { provide: APP_BASE_HREF, useValue: '/' }, AuthenticationService, MapService, OSMNominatimService ],
   declarations: [
     AppComponent,

@@ -2,13 +2,14 @@ import 'rxjs/Rx';
 import { LatLng } from 'leaflet';
 import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { MapeandoESService } from '../shared/mapeandoes.service';
 import { AuthenticationService } from '../shared/authentication.service';
 import { Demand } from './model/demand';
-import { IDistrict, ITheme, IDemand } from '@prodest/mapeandoes-typings';
+import { ITheme } from '@prodest/mapeandoes-typings';
 import { settings } from '../shared/settings';
 import { OSMNominatimService } from '../shared/osm-nominatim.service';
+import { AppError } from '../shared/exception/app-error';
 
 @Component( {
     moduleId: module.id,
@@ -21,13 +22,13 @@ import { OSMNominatimService } from '../shared/osm-nominatim.service';
             <div class="col-lg-6 col-sm-6">
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input name="name" class="form-control" disabled="disabled" value="{{user.nome}}" />
+                    <input name="name" class="form-control" disabled="disabled" value="{{user.profile.nome}}" />
                 </div>
             </div>
             <div class="col-lg-6 col-sm-6">
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input name="email" class="form-control" disabled="disabled" value="{{user.email}}" />
+                    <input name="email" class="form-control" disabled="disabled" value="{{user.profile.email}}" />
                 </div>
             </div>
         </div>
@@ -49,7 +50,7 @@ import { OSMNominatimService } from '../shared/osm-nominatim.service';
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <label for="themes">Tema(s)</label>
                         <br>
-                        <div class="checkbox-group">
+                        <div class="checkbox-group checkbox-group-themes" [ngClass]="{ valid: validThemes }">
                             <label *ngFor="let theme of themes" class="list-inline">
                                 <input type="checkbox" value="{{theme.id}}" (change)="toggleTheme($event, theme)"/>
                                 <i class="fa fa-square-o fa-2x"></i>
@@ -102,6 +103,7 @@ import { OSMNominatimService } from '../shared/osm-nominatim.service';
                         </label>
                         <br>
                         <map-demand #mapDemand
+                            class="small-map"
                             [showNewDemandButton]="false" 
                             [demands]="[]"
                             [currentLatLng]="this.currentlatlng"
@@ -130,6 +132,30 @@ import { OSMNominatimService } from '../shared/osm-nominatim.service';
             </div>
         </form>
     </div>
+    <modal #modal>
+        <modal-header>
+            <h1 class="app-modal-header">Sugestão enviada!</h1>
+        </modal-header>
+        <modal-content class="app-modal-content">
+            <p>
+                As contribuições enviadas serão analisadas pela equipe técnica do Plano de 
+                Desenvolvimento Metropolitano, respeitando os critérios de:
+            </p>
+            <ul>
+                <li>Adequação da proposta às funções públicas de interesse comum.</li>
+                <li>existência de outras propostas previamente enviadas.</li>
+            </ul>
+            <p>
+                Todas as contribuições enviadas por meio do portal, dentro dos critérios elencados 
+                acima, serão gradativamente disponibilizadas à consulta e incorporadas ao debate dos temas abordados.
+            </p>
+        </modal-content>
+        <modal-footer class="app-modal-footer">
+            <button 
+                class="btn btn-primary btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color btn-submit" 
+                (click)="modal.close()">Entendi</button>
+        </modal-footer>
+    </modal>
 </div>`,
     styleUrls: [ settings.orchardModulePath + 'form-demand.component.css' ]
 })
@@ -137,33 +163,43 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
     demandForm: NgForm;
     @ViewChild( 'demandForm' ) currentForm: NgForm;
     @ViewChild( 'mapDemand' ) mapDemand: any;
+    @ViewChild( 'modal' ) modal: any;
 
     @Input( 'latlng' ) currentlatlng: LatLng = undefined;
     @Input( 'user' ) user: any;
 
     @Output() onDemandSaved = new EventEmitter<void>();
+    @Output() onUserNotSignedIn = new EventEmitter<void>();
 
     districts: any[];
     categories: any[];
     themes: any[];
     sources: any[];
-
-    model: Demand = {
-        externalUserId: -1,
-        categoryId: '-1',
-        districts: [],
-        themes: [],
-        sourceId: '',
-        title: '',
-        description: '',
-        pins: [],
-        locationType: ''
-    };
+    model: Demand;
+    demandSaved: boolean;
+    defaultErrorMsg: string = 'Erro ao salvar sugestão, tente novamente mais tarde!';
 
     constructor( private router: Router,
         private mapeandoESService: MapeandoESService,
         private authenticationService: AuthenticationService,
-        private oSMNominatimService: OSMNominatimService ) { }
+        private oSMNominatimService: OSMNominatimService ) {
+        this.init();
+        this.demandSaved = false;
+    }
+
+    init() {
+        this.model = {
+            externalUserId: -1,
+            categoryId: '-1',
+            districts: [],
+            themes: [],
+            sourceId: '',
+            title: '',
+            description: '',
+            pins: [],
+            locationType: ''
+        };
+    }
 
     ngOnInit() {
         this.mapeandoESService.getDistricts().subscribe( districts => this.districts = districts.map(( d: any ) => {
@@ -178,6 +214,13 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
                 .subscribe( locationInfo => console.log( locationInfo ) );*/
 
         this.model.locationType = this.currentlatlng ? 'geolocation' : 'district';
+
+        this.modal.onClose.subscribe(() => {
+            if ( this.demandSaved ) {
+                this.demandSaved = false;
+                this.onDemandSaved.emit();
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -206,6 +249,10 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
         this.model.themes = this.toggleCheckbox( e, theme, this.model.themes );
     }
 
+    get validThemes() {
+        return this.model.themes.length > 0;
+    }
+
     toggleCheckbox( e: any, obj: any, list: any[] ): any[] {
         return e.target.checked ? list.concat( [ obj ] ) : list.filter( item => item.id !== obj.id );
     }
@@ -219,10 +266,34 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
     }
 
     onSubmit( model: Demand ) {
-        if ( this.currentForm.valid ) {
-            console.log( model );
-        }
+        this.authenticationService.getValidUser()
+            .then(( user: any ) => {
+                if ( user ) {
+                    return this.saveDemand( model );
+                }
+                throw new AppError( this.defaultErrorMsg );
+            })
+            .then(( response: any ) => {
+                this.modal.open();
+                this.demandSaved = true;
+                this.init();
+            })
+            .catch(( error: any ) => {
+                if ( error instanceof AppError ) {
+                    alert( error.message );
+                }
 
+                this.authenticationService.getUser()
+                    .then(( user: Oidc.User ) => {
+                        if ( !user || user.expired ) {
+                            alert( this.defaultErrorMsg );
+                            this.onUserNotSignedIn.emit();
+                        }
+                    });
+            });
+    }
+
+    saveDemand( model: Demand ) {
         let newDemand: any = {
             title: model.title,
             description: model.description,
@@ -243,9 +314,7 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
             });
         }
 
-        this.mapeandoESService.saveDemand( newDemand )
-            .then(( response: any ) => this.onDemandSaved.emit() )
-            .catch(( error: any ) => console.log( error ) );
+        return this.mapeandoESService.saveDemand( newDemand );
     }
 
     onLocationChanged( latlng: LatLng ) {

@@ -24,12 +24,27 @@ export class MapeandoESService {
             .map(( response: Response ) => response.json() as IDistrict[] );
     }
 
-    getAllDemands(): Observable<IDemand[]> {
+    getDemands( filters?: any ) {
+        return filters ? this.getFilteredDemands( filters ) : this.getAllDemands();
+    }
+
+    private getAllDemands(): Observable<IDemand[]> {
         return this.http.get( `${this.baseUrl}/demands` )
             .map(( response: Response ) => response.json() as IDemand[] );
     }
 
-    getUnfilteredAllDemands(): Promise<IDemand[]> {
+    private getFilteredDemands( filters: any ): Observable<IDemand[]> {
+        let body = this.buildFilter( filters );
+
+        return this.http.post( `${this.baseUrl}/demands/query`, body )
+            .map(( response: Response ) => response.json().result as IDemand[] );
+    }
+
+    getSecureDemands( filters?: any ) {
+        return filters ? this.getSecureFilteredDemands( filters ) : this.getSecureAllDemands();
+    }
+
+    private getSecureAllDemands(): Promise<IDemand[]> {
         return this.authenticationService.getAuthHeaders().then( headers => {
             return this.http.get( `${this.baseUrl}/secure/demands`, { headers: headers })
                 .map(( response: Response ) => response.json() as IDemand[] )
@@ -37,14 +52,7 @@ export class MapeandoESService {
         });
     }
 
-    getDemands( filters: any ): Observable<IDemand[]> {
-        let body = this.buildFilter( filters );
-
-        return this.http.post( `${this.baseUrl}/demands/query`, body )
-            .map(( response: Response ) => response.json().result as IDemand[] );
-    }
-
-    getUnfilteredDemands( filters: any ): Promise<IDemand[]> {
+    private getSecureFilteredDemands( filters: any ): Promise<IDemand[]> {
         let body = this.buildFilter( filters );
         return this.authenticationService.getAuthHeaders().then( headers => {
             return this.http.post( `${this.baseUrl}/secure/demands/query`, body, { headers: headers })
@@ -65,7 +73,16 @@ export class MapeandoESService {
 
     saveDemand( data: any ): Promise<any> {
         return this.authenticationService.getAuthHeaders().then( headers => {
-            return this.http.post( `${this.baseUrl}/secure/demands`, data, { headers: headers })
+            return this.http.post( `${this.baseUrl}/auth/demands`, data, { headers: headers })
+                .map(( response: Response ) => response.json() )
+                .toPromise();
+        });
+    }
+
+    updateDemand( data: any ): Promise<any> {
+        console.log( data );
+        return this.authenticationService.getAuthHeaders().then( headers => {
+            return this.http.put( `${this.baseUrl}/secure/demands/${data.id}`, data, { headers: headers })
                 .map(( response: Response ) => response.json() )
                 .toPromise();
         });

@@ -45,3 +45,9 @@
 .content-description {
     margin-top: 12px;
 }
+
+.aprove-reprove {
+    position: absolute;
+    right: 0;
+    top: 0;
+}

@@ -107,17 +107,59 @@ export class AuthenticationService {
             .catch(() => { });
     }
 
-    trySilentLogin() {
-        return this.manager.signinSilent()
-            .then( user => console.log( 'user', user ) )
-            .catch( error => console.log( 'error', error ) );
-    }
-
     getUserInfo(): Promise<any> {
         return this.getAuthHeaders()
             .then( headers =>
                 this.http.get( `${settings.authentication.authority}connect/userinfo`, { headers: headers })
                     .map(( response: Response ) => response.json() ).toPromise()
             );
+    }
+
+    getValidUser(): Promise<Oidc.User> {
+        /* return this.getUser()
+             .then(( user: Oidc.User ) => {
+                 if ( !user || user.expired ) {
+                     return this.manager.signinSilent();
+                 }
+                 return Promise.resolve( user );
+             })
+             .then(( user: Oidc.User ) => user ? user : undefined );*/
+
+        return this.getUser()
+            .then(( user: Oidc.User ) => {
+                if ( user ) {
+                    if ( user.expired ) {
+                        return this.popupSignin();
+                    }
+                    return Promise.resolve( user );
+                }
+                return Promise.resolve( undefined );
+            });
+    }
+
+    userAuthorized( recurso: string, acao: string, permissoes: any[] ): boolean {
+        if ( !recurso ) {
+            return true;
+        }
+
+        if ( !permissoes ) {
+            return false;
+        }
+
+        permissoes = [].concat( permissoes );
+        permissoes = permissoes.map(( a: any ) => JSON.parse( a ) );
+
+        let recursos: string[] = [];
+        if ( recurso ) {
+            recursos = permissoes.filter(( a: any ) => a.Recurso === recurso );
+        }
+
+        let acoes: any[] = [];
+        if ( acao ) {
+            acoes = recursos.filter(( a: any ) => a.Acoes === acao );
+            return acoes.length > 0;
+        } else {
+            return recursos.length > 0;
+        }
     }
 }

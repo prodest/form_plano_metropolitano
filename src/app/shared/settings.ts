@@ -21,6 +21,7 @@ export const settings: Settings = {
     },
 
     apiBaseUrl: 'https://api.es.gov.br/demands/api/v1',
+    // apiBaseUrl: 'http://localhost:4200/demands/api/v1',
 
     orchardModulePath: orchardModulePath
 };

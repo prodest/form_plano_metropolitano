@@ -48,16 +48,21 @@ let orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
 
       // other libraries
       'rxjs': 'npm:rxjs',
-      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
+      'ngx-modal': "node_modules/ngx-modal"
+
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
       app: {
-        main: './main.js?v=0.0.3',
+        main: './main.js?v=0.0.4',
         defaultExtension: 'js'
       },
       rxjs: {
         defaultExtension: 'js'
+      },
+      'ngx-modal': {
+        'main': 'index.js', 'defaultExtension': 'js'
       }
     }
   });

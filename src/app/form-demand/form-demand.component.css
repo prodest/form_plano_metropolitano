@@ -169,10 +169,13 @@ label:hover input[type="checkbox"] ~ i.fa {
     width: auto;
 }
 
-.ng-valid[required], .ng-valid.required  {
+.ng-valid[required], 
+.ng-valid.required,
+.checkbox-group-themes.valid  {
     border-left: 5px solid #42A948; /* green */
 }
-.ng-invalid:not(form)  {
+.ng-invalid:not(form),
+.checkbox-group-themes {
     border-left: 5px solid #a94442; /* red */
 }
 
@@ -182,4 +185,13 @@ label:hover input[type="checkbox"] ~ i.fa {
         padding-top: 12px;
         padding-bottom: 12px;        
     }    
+}
+
+.small-map {
+    height: 350px;
+}
+
+.app-modal-header {
+    text-align: center;
+    color: #c51267;
 }
