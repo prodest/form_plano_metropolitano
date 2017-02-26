@@ -33,6 +33,11 @@ export class MapComponent implements OnInit, OnChanges {
     markersGroupDemands: any = undefined;
     baseIcon: any = new BaseIcon();
 
+    private constant: number[];
+    private multiple: number[];
+    private polyX: number[];
+    private polyY: number[];
+
     constructor( private mapService: MapService, private router: Router, private mapeandoESService: MapeandoESService ) { }
 
     newDemand() {
@@ -41,6 +46,8 @@ export class MapComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.translateGeoJson( geoJsonGrandeVitoria );
+
         let map = this.createMap();
         if ( this.currentLatLng ) {
             this.marker = L.marker( this.currentLatLng, {
@@ -152,16 +159,18 @@ export class MapComponent implements OnInit, OnChanges {
             maxZoom: 18,
             maxBounds: L.latLngBounds( L.latLng( -21.361013117950915, -41.97223663330079 ),
                 L.latLng( -17.853290114098012, -39.52228546142579 ) ),
-            layers: [ this.mapService.baseMaps.GoogleMaps ]
+            layers: [ this.mapService.baseMaps.OpenStreetMap ]
         });
 
+        // Add zoom control
         this.zoomControl = L.control.zoom( { position: 'topright' }).addTo( map );
         L.control.scale().addTo( map );
 
-        /*let coords = geoJsonGrandeVitoria.geometries.coordinates.map( a => L.latLng( a[ 1 ], a[ 0 ] ) );
-        L.polygon( coords ).addTo( map );
-        console.log( coords );*/
+        // Print clickble region on map
+        let coords = geoJsonGrandeVitoria.geometries.coordinates.map( a => L.latLng( a[ 1 ], a[ 0 ] ) );
+        L.polygon( coords, { stroke: false, opacity: 0.2 }).addTo( map );
 
+        // Set map click
         map.on( 'click', this.mapClick( map ) );
 
         return map;
@@ -169,11 +178,17 @@ export class MapComponent implements OnInit, OnChanges {
 
     private mapClick( map: any ) {
         return ( e: any ) => {
+            if ( !this.pointInPolygon( this.polyY, this.polyX, this.constant, this.multiple, { x: e.latlng.lng, y: e.latlng.lat }) ) {
+                alert( 'Por favor, selecione uma região da Grande Vitória' );
+                return;
+            }
+
             if ( this.marker ) {
                 map.removeLayer( this.marker );
             }
 
             console.log( e.latlng );
+            this.currentLatLng = e.latlng;
             this.onLocationChanged.emit( e.latlng );
 
             this.marker = L.marker( e.latlng, {
@@ -190,7 +205,13 @@ export class MapComponent implements OnInit, OnChanges {
             }
 
             this.marker.on( 'moveend', ( moveEvent: any ) => {
-                this.onLocationChanged.emit( moveEvent.target._latlng );
+                let latlng = moveEvent.target._latlng;
+                if ( this.pointInPolygon( this.polyY, this.polyX, this.constant, this.multiple, { x: latlng.lng, y: latlng.lat }) ) {
+                    this.onLocationChanged.emit( latlng );
+                } else {
+                    this.marker.setLatLng( this.currentLatLng );
+                }
+
             });
         };
     }
@@ -229,38 +250,51 @@ export class MapComponent implements OnInit, OnChanges {
     //  Note that division by zero is avoided because the division is protected
     //  by the "if" clause which surrounds it.
 
-    /*   private constant;
-       private multiple;
-   
-       private precalc_values( polyCorners, polyY, polyX ) {
-           let j = polyCorners - 1;
-   
-           for ( let i = 0; i < polyCorners; i++ ) {
-               if ( polyY[ j ] === polyY[ i ] ) {
-                   this.constant[ i ] = polyX[ i ];
-                   this.multiple[ i ] = 0;
-               }
-               else {
-                   this.constant[ i ] = polyX[ i ] - ( polyY[ i ] * polyX[ j ] ) / ( polyY[ j ] - polyY[ i ] ) + ( polyY[ i ] * polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
-                   this.multiple[ i ] = ( polyX[ j ] - polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
-               }
-               j = i;
-           }
-       }
-   
-       private pointInPolygon( polyCorners, polyY, polyX, constant, multiple ): boolean {
-   
-           int   i, j = polyCorners - 1;
-           bool  oddNodes= NO;
-   
-           for ( i = 0; i < polyCorners; i++ ) {
-               if ( ( polyY[ i ] < y && polyY[ j ] >= y
-                   || polyY[ j ] < y && polyY[ i ] >= y ) ) {
-                   oddNodes ^= ( y * multiple[ i ] + constant[ i ] < x );
-               }
-               j = i;
-           }
-   
-           return oddNodes;
-       }*/
+    private translateGeoJson( polyGeoJson: any ) {
+        this.polyX = [];
+        this.polyY = [];
+
+        polyGeoJson.geometries.coordinates.forEach(( coords: any ) => {
+            this.polyX.push( coords[ 0 ] );
+            this.polyY.push( coords[ 1 ] );
+        });
+
+        this.precalc_values( this.polyY, this.polyX );
+    }
+
+    private precalc_values( polyY: number[], polyX: number[] ) {
+        let j = polyY.length - 1;
+        this.constant = [];
+        this.multiple = [];
+
+        for ( let i = 0; i < polyY.length; i++ ) {
+            if ( polyY[ j ] === polyY[ i ] ) {
+                this.constant[ i ] = polyX[ i ];
+                this.multiple[ i ] = 0;
+            } else {
+                this.constant[ i ] =
+                    polyX[ i ] - ( polyY[ i ] * polyX[ j ] )
+                    /
+                    ( polyY[ j ] - polyY[ i ] ) + ( polyY[ i ] * polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
+
+                this.multiple[ i ] = ( polyX[ j ] - polyX[ i ] ) / ( polyY[ j ] - polyY[ i ] );
+            }
+            j = i;
+        }
+    }
+
+    private pointInPolygon( polyY: any, polyX: any, constant: any, multiple: any, point: any ): boolean {
+        let j: number = polyY.length - 1;
+        let oddNodes = false;
+
+        for ( let i = 0; i < polyY.length; i++ ) {
+            if ( ( polyY[ i ] < point.y && polyY[ j ] >= point.y
+                || polyY[ j ] < point.y && polyY[ i ] >= point.y ) ) {
+                oddNodes = oddNodes !== ( point.y * multiple[ i ] + constant[ i ] < point.x );
+            }
+            j = i;
+        }
+
+        return oddNodes;
+    }
 }
