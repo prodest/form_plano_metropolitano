@@ -63,10 +63,10 @@ export class FilterDemandComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.mapeandoESService.getCategories().subscribe( categories => this.filters.categories = categories );
-        this.mapeandoESService.getThemes().subscribe( themes => this.filters.themes = themes );
-        this.mapeandoESService.getSources().subscribe( sources => this.filters.sources = sources );
-        this.mapeandoESService.getDistricts().subscribe( districts => this.filters.districts = districts );
+        // this.mapeandoESService.getCategories().subscribe( categories => this.filters.categories = this.sort( categories ) );
+        this.mapeandoESService.getThemes().subscribe( themes => this.filters.themes = this.sort( themes ) );
+        this.mapeandoESService.getSources().subscribe( sources => this.filters.sources = this.sort( sources ) );
+        this.mapeandoESService.getDistricts().subscribe( districts => this.filters.districts = this.sort( districts ) );
     }
 
     filter( filters: DemandFilters ) {
@@ -84,6 +84,14 @@ export class FilterDemandComponent implements OnInit {
             }
         }
         return false;
+    }
+
+    private sort( list: any[] ) {
+        return list.sort(( a, b ) => {
+            if (a.name === 'Outros') { return 1; }
+            if (b.name === 'Outros') { return -1; }
+            return a.name.localeCompare( b.name );
+        });
     }
 }
 

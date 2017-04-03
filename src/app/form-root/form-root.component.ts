@@ -20,18 +20,22 @@ import { settings } from '../shared/settings';
             *ngIf="newDemand && authorized"></form-demand> 
 
         <div *ngIf="!newDemand">
-            <h4>Para enviar uma sugestão clique no botão abaixo.</h4>
-            <div class="text-center">
-                <button 
-                    (click)="onNewDemand()"
-                    class="btn-enviar-sugestao btn btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">
-                    Enviar Sugestão
-                </button>
-             <div>
+            <div class="row info-mapa">
+                <div class="col-lg-12">
+                    <h4>Para enviar sugestôes
+                    <button 
+                        (click)="onNewDemand()"
+                        class="btn-enviar-sugestao btn btn-md background-primary-button-background-color primary-button-border-border-color font-color-primary-button-color">
+                        CLIQUE AQUI
+                    </button>
+                    </h4>
+                </div>
+            </div>
+            
             <div class="row info-mapa">
                 <div class="col-lg-12">
                     <p class="titulo-contribuicoes">
-                        A seguir as contribuições enviadas pelos nossos cidadãos metropolitanos:
+                        Veja as contribuições enviadas pelos cidadãos metropolitanos:
                     </p>
                 </div>
             </div>

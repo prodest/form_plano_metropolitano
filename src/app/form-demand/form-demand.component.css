@@ -130,6 +130,10 @@ label:hover input[type="checkbox"] ~ i.fa {
     color:#aaa;
 }
 
+h6.info-input {
+    font-size: 14px;
+}
+
 .checkbox-group label {
     display: block;
     width: 100%;

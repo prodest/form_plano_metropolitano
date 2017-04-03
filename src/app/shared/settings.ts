@@ -1,12 +1,19 @@
 // Para tratar o deploy em homologação e produção, sem precisar ficar alterando o valor de System.config -> map.app
+let apiBaseUrl = '';
 let orchardModulePath = '';
 let redirectCallback = '';
-if ( this.location && ( this.location.host.indexOf( 'condevit' ) >= 0 || this.location.host.indexOf( 'planometropolitano' ) >= 0 ) ) {
+if ( this.location && ( this.location.host.indexOf( 'planometropolitano' ) >= 0 ) ) {
+    orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
+    redirectCallback = 'http://condevit.es.gov.br/' + orchardModulePath;
+    apiBaseUrl = 'https://api.es.gov.br/demands/api/v1';
+} else if ( this.location && ( this.location.host.indexOf( 'condevit' ) >= 0 ) ) {
     orchardModulePath = 'Media/_external_modules/form_plano_metropolitano/app/';
     redirectCallback = 'http://condevit.dchm.es.gov.br/' + orchardModulePath;
+    apiBaseUrl = 'https://api.es.gov.br/demands/api/v1';
 } else {
     orchardModulePath = '';
     redirectCallback = 'http://localhost:3000/build/src/app/login/callback/';
+    apiBaseUrl = 'https://api.es.gov.br/demands/api/v1';
 }
 
 export const settings: Settings = {
@@ -19,10 +26,7 @@ export const settings: Settings = {
         response_type: 'id_token token',
         scope: 'openid nome email'
     },
-
-    apiBaseUrl: 'https://api.es.gov.br/demands/api/v1',
-    // apiBaseUrl: 'http://localhost:4200/demands/api/v1',
-
+    apiBaseUrl: apiBaseUrl,
     orchardModulePath: orchardModulePath
 };
 

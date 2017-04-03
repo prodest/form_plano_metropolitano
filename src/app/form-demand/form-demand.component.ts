@@ -68,6 +68,11 @@ import { AppError } from '../shared/exception/app-error';
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <h6 class="info-input">Selecione abaixo o(s) municípios ao(s) qual(s) se destina(m) sua contribuição ou, se preferir, identifique o local no mapa</h6>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12 col-md-5 col-lg-4">
                         <label class="radio-button">
                             <input name="radio-locatino" type="radio" value="district" 
@@ -202,13 +207,13 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.mapeandoESService.getDistricts().subscribe( districts => this.districts = districts.map(( d: any ) => {
+        this.mapeandoESService.getDistricts().subscribe( districts => this.districts = this.sort( districts ).map(( d: any ) => {
             d.checked = false;
             return d;
         }) );
-        this.mapeandoESService.getCategories().subscribe( categories => this.categories = categories );
-        this.mapeandoESService.getThemes().subscribe( themes => this.themes = themes );
-        this.mapeandoESService.getSources().subscribe( sources => this.sources = sources );
+        // this.mapeandoESService.getCategories().subscribe( categories => this.categories = this.sort( categories ) );
+        this.mapeandoESService.getThemes().subscribe( themes => this.themes = this.sort( themes ) );
+        this.mapeandoESService.getSources().subscribe( sources => this.sources = this.sort( sources ) );
 
         /*this.oSMNominatimService.getLocationName( e.latlng.lat, e.latlng.lng )
                 .subscribe( locationInfo => console.log( locationInfo ) );*/
@@ -323,5 +328,13 @@ export class FormDemandComponent implements OnInit, AfterViewInit {
 
     logout() {
         this.authenticationService.logoutPopup();
+    }
+
+    private sort( list: any[] ) {
+        return list.sort(( a, b ) => {
+            if ( a.name === 'Outros' ) { return 1; }
+            if ( b.name === 'Outros' ) { return -1; }
+            return a.name.localeCompare( b.name );
+        });
     }
 }
