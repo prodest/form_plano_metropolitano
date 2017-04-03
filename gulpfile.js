@@ -12,7 +12,8 @@ const watch = require( 'gulp-watch' );
 let paths = {
     srcPath: 'src/app/',
     buildPath: 'build/src/',
-    bundlePath: 'src/bundle/',
+    buildAppPath: 'build/src/app/',
+    bundlePath: 'build/bundle/',
     src: [ 'src/app/**/*.ts' ],
     static: [ 'src/**/*.html', 'src/*.js', 'src/**/*.css' ],
     css: [ 'src/app/**/*.css' ],
@@ -67,7 +68,7 @@ gulp.task( 'build', [ 'clean' ], function () {
         .pipe( sourcemaps.init() )
         .pipe( ts() )
         .pipe( sourcemaps.write( '.', { includeContent: true, sourceRoot: () => path.join( __dirname, paths.srcPath ) }) )
-        .pipe( gulp.dest( paths.buildPath ) );
+        .pipe( gulp.dest( paths.buildAppPath ) );
 });
 
 gulp.task( 'build:prod', [ 'clean' ], function () {
@@ -76,7 +77,7 @@ gulp.task( 'build:prod', [ 'clean' ], function () {
 
     return gulp.src( paths.src )
         .pipe( ts() )
-        .pipe( bundle() )
+        // .pipe( bundle() )
         .pipe( minify() )
-        .pipe( gulp.dest( paths.buildPath ) );
+        .pipe( gulp.dest( paths.buildAppPath ) );
 });
