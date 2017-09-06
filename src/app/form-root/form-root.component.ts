@@ -91,7 +91,7 @@ export class FormRootComponent implements OnInit {
     }
 
     loadAllDemands( filters?: any ) {
-        this.mapeandoESService.getSecureDemands( filters ).then( demands => this.demands = demands );;
+        this.mapeandoESService.getSecureDemands( filters ).then( demands => this.demands = demands );
     }
 
     private get authorized() {
@@ -100,9 +100,9 @@ export class FormRootComponent implements OnInit {
 
     onFilterDemands( filters: any ) {
         if ( this.isModerator ) {
-            this.mapeandoESService.getSecureDemands( filters ).then( demands => this.demands = demands );;
+            this.mapeandoESService.getSecureDemands( filters ).then( demands => this.demands = demands );
         } else {
-            this.mapeandoESService.getDemands( filters ).subscribe( demands => this.demands = demands );;
+            this.mapeandoESService.getDemands( filters ).subscribe( demands => this.demands = demands );
         }
     }
 
