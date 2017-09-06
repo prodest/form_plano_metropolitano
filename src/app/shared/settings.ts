@@ -24,7 +24,7 @@ export const settings: Settings = {
         silent_redirect_uri: redirectCallback + 'silent-callback.template.html',
         post_logout_redirect_uri: redirectCallback + 'popup-callback.template.html',
         response_type: 'id_token token',
-        scope: 'openid nome email'
+        scope: 'openid nome email permissoes'
     },
     apiBaseUrl: apiBaseUrl,
     orchardModulePath: orchardModulePath
